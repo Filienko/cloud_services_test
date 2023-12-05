@@ -36,7 +36,7 @@ public class DataReciever implements RequestHandler<Request, HashMap<String, Obj
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
         String timestamp = dateFormat.format(new Date());
         String filename = request.getFilename() + timestamp + ".csv";
-        if (csvEntries.size() == 10) {
+      
            
             String combinedCsvData = String.join("\n", csvEntries);
 
@@ -55,7 +55,7 @@ public class DataReciever implements RequestHandler<Request, HashMap<String, Obj
 
             
             csvEntries.clear();
-        }
+        
 
         Response response = new Response();
         response.setValue("Bucket:" + bucketname + " filename:" + filename);
