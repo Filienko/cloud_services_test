@@ -1,33 +1,9 @@
 package lambda;
-
-/**
- *
- * @author Wes Lloyd
- *@author Tyler Robinson
- */
 public class Request {
     private String bucketname;
     private String filename;
-    private String CsvData;
+    private String data;
 
-
-    String name;
-
-    public String getName() {
-        return name;
-    }
-    
-    public String getNameALLCAPS() {
-        return name.toUpperCase();
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Request(String name) {
-        this.name = name;
-    }
 
     public Request() {
 
@@ -67,14 +43,14 @@ public class Request {
     /**
      * @return the CsvData
      */
-    public String getCsvData() {
-        return CsvData;
+    public String getData() {
+        return data;
     }
 
     /**
      * @param CsvData the CsvData to set
      */
-    public void setCsvData(String CsvData) {
-        this.CsvData = CsvData;
+    public void setData(String CsvData) {
+        this.data = CsvData;
     }
 }
