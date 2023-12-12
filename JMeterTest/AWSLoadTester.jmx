@@ -10,7 +10,7 @@
       </elementProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Varying Payload Test" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <stringProp name="LoopController.loops">2</stringProp>
@@ -32,19 +32,21 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-  &quot;name&quot;: &quot;Susan Smith&quot;,&#xd;
-  &quot;param1&quot;: 1,&#xd;
-  &quot;param2&quot;: 2,&#xd;
-  &quot;param3&quot;: 3&#xd;
+  &quot;row&quot;: &quot;${numberOfRows}&quot;,&#xd;
+  &quot;col&quot;: 5, &#xd;
+  &quot;bucketname&quot;: &quot;projectbucketdatarecieved&quot;,&#xd;
+  &quot;filename&quot;: &quot;test.csv&quot;,&#xd;
+  &quot;CsvData&quot;: &quot;${payload}&quot;&#xd;
 }&#xd;
+&#xd;
 </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">5dpzqh2z2f.execute-api.us-east-2.amazonaws.com</stringProp>
+          <stringProp name="HTTPSampler.domain">ddkxwe33ja.execute-api.us-east-2.amazonaws.com</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
-          <stringProp name="HTTPSampler.path">/test-deploy</stringProp>
+          <stringProp name="HTTPSampler.path">/test</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -66,6 +68,51 @@
               </elementProp>
             </collectionProp>
           </HeaderManager>
+          <hashTree/>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import org.apache.commons.io.FileUtils
+import java.io.File
+import java.util.Random
+
+// Define the path to the CSV file
+String csvFilePath = &quot;/c/Users/pihol/eclipse-workspace/TCSS462/cloud_services_test/JMeterTest/sales.csv&quot;
+
+// Read the CSV file into a list of lines
+List&lt;String&gt; lines = FileUtils.readLines(new File(csvFilePath), &quot;UTF-8&quot;)
+
+// Random object to determine the number of rows for each thread
+Random random = new Random()
+int minRows = 50000  // Minimum number of rows
+int maxRows = 100000  // Maximum number of rows
+
+// Use a unique property name for each thread group
+String counterPropertyName = &quot;VaryingPayloadTestCounter&quot; 
+
+// Synchronized block to ensure thread safety
+synchronized (this) {
+    // Read and update the shared index
+    int sharedIndex = Integer.parseInt(props.get(counterPropertyName))
+    int numberOfRows = random.nextInt(maxRows - minRows + 1) + minRows
+    numberOfRows = Math.min(numberOfRows, lines.size() - sharedIndex)
+
+    // Building the payload
+    StringBuilder payload = new StringBuilder()
+    for (int i = sharedIndex; i &lt; sharedIndex + numberOfRows &amp;&amp; i &lt; lines.size(); i++) {
+        payload.append(lines.get(i)).append(&quot;\n&quot;)
+    }
+
+    // Update sharedIndex for the next thread
+    props.put(counterPropertyName, String.valueOf(sharedIndex + numberOfRows))
+
+    // Set the payload as a variable
+    vars.put(&quot;payload&quot;, payload.toString())
+}
+</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PreProcessor>
           <hashTree/>
         </hashTree>
         <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
@@ -164,8 +211,17 @@
           <stringProp name="TestPlan.comments">Limited Hardware simulation, which freezes when the limit is reached</stringProp>
         </ConstantThroughputTimer>
         <hashTree/>
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
+          <stringProp name="CounterConfig.start"></stringProp>
+          <stringProp name="CounterConfig.end"></stringProp>
+          <stringProp name="CounterConfig.incr"></stringProp>
+          <stringProp name="CounterConfig.name"></stringProp>
+          <stringProp name="CounterConfig.format"></stringProp>
+          <boolProp name="CounterConfig.per_user">false</boolProp>
+        </CounterConfig>
+        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <stringProp name="LoopController.loops">2</stringProp>
@@ -441,6 +497,30 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
           <stringProp name="TestPlan.comments">To simulate n separate users randomly invoking the service</stringProp>
         </UniformRandomTimer>
+        <hashTree/>
+      </hashTree>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">props.put(&quot;VaryingPayloadTestCounter&quot;, &quot;0&quot;)
+</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
         <hashTree/>
       </hashTree>
     </hashTree>
