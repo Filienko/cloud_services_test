@@ -187,11 +187,10 @@ synchronized (this) {
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Timer that varies call times to simulate real world traffic" enabled="true">
-          <stringProp name="ConstantTimer.delay">300</stringProp>
-          <stringProp name="RandomTimer.range">1000.0</stringProp>
-          <stringProp name="TestPlan.comments">To simulate n users under more realistic conditions</stringProp>
-        </GaussianRandomTimer>
+<ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+  <stringProp name="ConstantTimer.delay">500</stringProp>
+  <stringProp name="TestPlan.comments">To simulate n users with a constant delay</stringProp>
+</ConstantTimer>
         <hashTree/>
         <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter Pointer for Data File" enabled="true">
           <stringProp name="CounterConfig.start"></stringProp>
