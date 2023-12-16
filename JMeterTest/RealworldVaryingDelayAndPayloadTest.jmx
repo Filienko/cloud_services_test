@@ -16,7 +16,7 @@
           <stringProp name="LoopController.loops">1</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">5</stringProp>
+        <stringProp name="ThreadGroup.num_threads">36</stringProp>
         <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <boolProp name="ThreadGroup.delayedStart">false</boolProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -53,7 +53,7 @@
           <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">false</boolProp>
           <boolProp name="HTTPSampler.image_parser">false</boolProp>
           <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
-          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+          <stringProp name="HTTPSampler.concurrentPool">36</stringProp>
           <boolProp name="HTTPSampler.md5">false</boolProp>
           <intProp name="HTTPSampler.ipSourceType">0</intProp>
         </HTTPSamplerProxy>
@@ -83,8 +83,8 @@ List&lt;String&gt; lines = FileUtils.readLines(new File(csvFilePath), &quot;UTF-
 
 // Random object to determine the number of rows for each thread
 Random random = new Random()
-int minRows = 50  // Minimum number of rows
-int maxRows = 100  // Maximum number of rows
+int minRows = 500  // Minimum number of rows
+int maxRows = 1000  // Maximum number of rows
 
 // Use a unique property name for each thread group
 String counterPropertyName = &quot;VaryingPayloadTestCounter&quot; 
