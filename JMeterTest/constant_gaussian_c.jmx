@@ -83,8 +83,8 @@ List&lt;String&gt; lines = FileUtils.readLines(new File(csvFilePath), &quot;UTF-
 
 // Random object to determine the number of rows for each thread
 Random random = new Random()
-int minRows = 50  // Minimum number of rows
-int maxRows = 100  // Maximum number of rows
+int minRows = 1000  // Minimum number of rows
+int maxRows = 10001 // Maximum number of rows
 
 // Use a unique property name for each thread group
 String counterPropertyName = &quot;VaryingPayloadTestCounter&quot; 
